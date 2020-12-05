@@ -5,9 +5,9 @@ import com.epam.model.dao.BookDao;
 import com.epam.model.dao.storage.BookWareHouse;
 import com.epam.model.entity.Book;
 import com.epam.model.entity.Publisher;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class BookDaoImpl implements BookDao {
@@ -30,23 +30,32 @@ public class BookDaoImpl implements BookDao {
     }
 
     @Override
-    public void updateById(int id, String bookTitle) throws DaoException {
-        Book updateBook = wareHouse.get(id);
-        Book book = new Book(updateBook.getBookId(), bookTitle, updateBook.getAuthors(), updateBook.getPublisher(), updateBook.getPagesNumber());
-        wareHouse.update(id, book);
+    public boolean updateById(int id, String bookTitle) {
+        try {
+            Book updateBook = wareHouse.get(id);
+            Book newBook = new Book(updateBook.getBookId(), bookTitle, updateBook.getAuthors(), updateBook.getPublisher(), updateBook.getPagesNumber());
+            wareHouse.update(id, newBook);
+            return true;
+        } catch (DaoException e) {
+            return false;
+        }
     }
 
     @Override
-    public void updateById(int id, Publisher publisher) throws DaoException {
-        Book updateBook = wareHouse.get(id);
-        Book book = new Book(updateBook.getBookId(), updateBook.getBookTitle(), updateBook.getAuthors(), publisher, updateBook.getPagesNumber());
-        wareHouse.update(id, book);
+    public boolean updateById(int id, Publisher publisher) {
+        try {
+            Book updateBook = wareHouse.get(id);
+            Book newBook = new Book(updateBook.getBookId(), updateBook.getBookTitle(), updateBook.getAuthors(), publisher, updateBook.getPagesNumber());
+            wareHouse.update(id, newBook);
+            return true;
+        } catch (DaoException e) {
+            return false;
+        }
     }
 
     @Override
-    public Optional<Book> findById(int id) throws DaoException {
-        Book resultBook = wareHouse.get(id);
-        return Optional.of(resultBook);
+    public Book findById(int id) throws DaoException {
+        return wareHouse.get(id);
     }
 
     @Override

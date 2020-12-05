@@ -36,38 +36,45 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void updateById(int id, String bookTitle) {
-        try {
-            bookDao.updateById(id, bookTitle);
-        } catch (DaoException e) {
-            logger.log(Level.ERROR, e);
-        }
-    }
-
-    @Override
-    public void updateById(int id, Publisher publisher) {
-        try {
-            bookDao.updateById(id, publisher);
-        } catch (DaoException e) {
-            logger.log(Level.ERROR, e);
-        }
-    }
-
-    @Override
-    public Optional<Book> findById(int id) {
-        Optional<Book> result = Optional.empty();
-        try {
-            result = bookDao.findById(id);
-        } catch (DaoException e) {
-            logger.log(Level.ERROR, "Id out of bound");
+    public boolean updateById(int id, String bookTitle) {
+        boolean result = bookDao.updateById(id, bookTitle);
+        if (result) {
+            logger.log(Level.INFO, "Successful update by bookTitle");
+        } else {
+            logger.log(Level.INFO, "Unsuccessful update by bookTitle");
         }
         return result;
     }
 
     @Override
+    public boolean updateById(int id, Publisher publisher) {
+        boolean result = bookDao.updateById(id, publisher);
+        if (result) {
+            logger.log(Level.INFO, "Successful update by publisher");
+        } else {
+            logger.log(Level.INFO, "Unsuccessful update by publisher");
+        }
+        return result;
+    }
+
+    @Override
+    public Optional<Book> findById(int id) {
+        Optional<Book> result;
+        try {
+            Book book = bookDao.findById(id);
+            result = Optional.of(book);
+            return result;
+        } catch (DaoException e) {
+            logger.log(Level.ERROR, "Id out of bound");
+            result = Optional.empty();
+            return result;
+        }
+    }
+
+    @Override
     public List<Book> findByBookTitle(String bookTitle) {
         List<Book> bookList = bookDao.findByBookTitle(bookTitle);
-        bookList.sort(Comparator.comparing(Book::getPagesNumber));
+        bookList.sort(Comparator.comparing(Book::getBookTitle));
         logger.log(Level.INFO, "Find list of book by bookTitle");
         return bookList;
     }
@@ -75,7 +82,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<Book> findByPublisher(Publisher publisher) {
         List<Book> bookList = bookDao.findByPublisher(publisher);
-        bookList.sort(Comparator.comparing(Book::getPagesNumber));
+        bookList.sort(Comparator.comparing(Book::getPublisher));
         logger.log(Level.INFO, "Find list of book by publisher");
         return bookList;
     }

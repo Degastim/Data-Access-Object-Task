@@ -4,7 +4,6 @@ import com.epam.exception.DaoException;
 import com.epam.model.entity.Book;
 import com.epam.model.entity.Publisher;
 import java.util.List;
-import java.util.Optional;
 
 public interface BookDao {
 
@@ -12,11 +11,11 @@ public interface BookDao {
 
     void delete(Book book) throws DaoException;
 
-    void updateById(int id, String BookTitle) throws DaoException;
+    boolean updateById(int id, String BookTitle);
 
-    void updateById(int id, Publisher publisher) throws DaoException;
+    boolean updateById(int id, Publisher publisher);
 
-    Optional<Book> findById(int id) throws DaoException;
+    Book findById(int id) throws DaoException;
 
     List<Book> findAll();
 
